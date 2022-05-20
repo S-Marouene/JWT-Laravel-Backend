@@ -16,4 +16,5 @@ Route::group([
     Route::get('user-profile', 'AuthController@userProfile');
 
     Route::get('user-get', 'UserController@me');
+    Route::delete('delete-user/{id}', 'UserController@delete');
 });

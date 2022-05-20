@@ -14,26 +14,23 @@ use Auth;
 
 class UserController extends Controller
 {
-    /**
-     * Create a new AuthController instance.
-     *
-     * @return void
-     */
+
     public function __construct()
     {
         $this->middleware('jwt.auth', []);
     }
 
-    /**
-     * Get the authenticated User
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function me()
     {
-        //return response()->json(Auth::guard()->user());
      return User::get();
-       //return response()->json([ 'valid' => auth()->check() ]);
-       //return response()->json(auth()->user());
+    }
+
+    public function delete($id){
+        $user = User::findOrFail($id);
+        if($user)
+        $user->delete(); 
+        else
+            return response()->json("error");
+        return response()->json(null); 
     }
 }
