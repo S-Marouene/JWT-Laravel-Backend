@@ -11,26 +11,35 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Auth;
 
-
 class UserController extends Controller
 {
 
     public function __construct()
     {
-        $this->middleware('jwt.auth', []);
+        //$this->middleware('jwt.auth', []);
     }
 
     public function me()
     {
-     return User::get();
+        return User::get();
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         $user = User::findOrFail($id);
-        if($user)
-        $user->delete(); 
+        if ($user)
+            $user->delete();
         else
             return response()->json("error");
-        return response()->json(null); 
+        return response()->json("Success delete");
+    }
+
+    public function update($id)
+    {
+        $user = User::find($id);
+        if( $user->fill(request()->input())->save() ){
+            return response()->json("updated item succesfuly");
+        }
+        return response()->json("Error"); 
     }
 }

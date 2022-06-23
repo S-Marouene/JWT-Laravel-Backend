@@ -49,10 +49,12 @@ class AuthController extends Controller {
     public function register(Request $request) {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
+            'fname' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6',
             'role' => 'required|string',
-            'path' => 'nullable'
+            'path' => 'nullable',
+            'status' => 'required'
         ]);
 
         if($validator->fails()){
@@ -70,7 +72,10 @@ class AuthController extends Controller {
         ], 201);
     }
 
-
+    public function me()
+    {
+        return response()->json(auth()->user());
+    }
     /**
      * Log the user out (Invalidate the token).
      *
@@ -108,6 +113,8 @@ class AuthController extends Controller {
      * @return \Illuminate\Http\JsonResponse
      */
     protected function createNewToken($token){
+        
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
