@@ -154,7 +154,6 @@ return [
         'nbf',
         'sub',
         'jti',
-        'user',
     ],
 
     /*
