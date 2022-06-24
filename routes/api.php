@@ -25,7 +25,7 @@ Route::group([
     Route::post('GetUserByToken', 'UserController@GetUserByToken');
 
     /**ROLE AND PERMISSION */
-    Route::post('user-roles',  'UserController@GetPermissionByRole');
+    Route::get('user-roles',  'UserController@GetPermissionByRole');
 
 
 

@@ -16,8 +16,7 @@ class AuthController extends Controller {
      * @return void
      */
     public function __construct() {
-       // $this->middleware('auth:api', ['except' => ['login', 'register']]);
-       // User::find(1)->assignRole('Super Admin');
+       $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
     /**

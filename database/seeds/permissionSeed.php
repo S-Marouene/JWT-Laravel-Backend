@@ -17,7 +17,12 @@ class permissionSeed extends Seeder
     {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // create permissions
+        
+
+        /* Permission::create(['name' => 'calendrier']);
+        Permission::create(['name' => 'test_crud']);
+        Permission::create(['name' => 'condidat']);
+         */// create permissions
         /* Permission::create(['name' => 'modif']);
         Permission::create(['name' => 'supprimer']);
         Permission::create(['name' => 'read']);
