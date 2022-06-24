@@ -3,16 +3,15 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-//use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Permission\Traits\HasRoles;
 
 // JWT contract
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
 class User extends Authenticatable implements JWTSubject {
-    use /*HasFactory,*/Notifiable;
+    use Notifiable,HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -61,8 +60,8 @@ class User extends Authenticatable implements JWTSubject {
             'fname' => $this->fname,
             'email' => $this->email,
             'role' => $this->role,
-            'registered_at'   => $this->created_at->toIso8601String(),
-            'last_updated_at' => $this->updated_at->toIso8601String(),
+          /*   'registered_at'   => $this->created_at->toIso8601String(),
+            'last_updated_at' => $this->updated_at->toIso8601String(), */
         ];
     }
 }

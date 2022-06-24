@@ -1,28 +1,33 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tymon\JWTAuth\JWTAuth;
 use App\Http\Controllers\Controller;
 use App\Api\V1\Requests\LoginRequest;
 use App\User;
+use Illuminate\Http\Response as HttpResponse;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Auth;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response as FacadesResponse;
 
 class UserController extends Controller
 {
 
     public function __construct()
     {
-        //$this->middleware('jwt.auth', []);
+        $this->middleware('jwt.auth', []);
     }
 
-    public function me()
+    public function GetAllUser()
     {
-        return User::get();
+        return response()->json(User::get());
     }
+
+   
 
     public function delete($id)
     {
@@ -41,5 +46,26 @@ class UserController extends Controller
             return response()->json("updated item succesfuly");
         }
         return response()->json("Error"); 
+    }
+
+
+
+    public function GetUserByToken()
+    {
+        if (Auth::check()) {
+            return response()->json(auth()->user());
+        }else {
+            return response()->json("non connecter");
+        }
+    }
+
+
+    public function GetPermissionByRole()
+    {
+        $user =  auth()->user();
+        $roles = $user->getRoleNames();
+        $permissions = $user->getAllPermissions();
+
+        return response()->json(['RoleName' => $roles, 'AllPermission' => $permissions]);
     }
 }

@@ -3,23 +3,31 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
 
 ], function ($router) {
-    Route::post('login', 'AuthController@login');
     
+    /* LOGIN */
+    Route::post('login', 'AuthController@login')->name('login');
     Route::post('register', 'AuthController@register');
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
+
+    /* USER CRUD */
     Route::get('user-profile', 'AuthController@userProfile');
-
-    Route::post('me', [App\Http\Controllers\AuthController::class, 'me']);
-
-    Route::get('user-get', 'UserController@me');
     Route::delete('delete-user/{id}', 'UserController@delete');
     Route::put('update-user/{id}', 'UserController@update');
+    Route::get('user-get', 'UserController@GetAllUser');
+
+    /**GET USER BY TOKEN */
+    Route::post('GetUserByToken', 'UserController@GetUserByToken');
+
+    /**ROLE AND PERMISSION */
+    Route::post('user-roles',  'UserController@GetPermissionByRole');
+
+
+
     
 });
