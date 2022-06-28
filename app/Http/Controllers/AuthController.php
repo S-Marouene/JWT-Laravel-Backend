@@ -47,6 +47,7 @@ class AuthController extends Controller {
      * @return \Illuminate\Http\JsonResponse
      */
     public function register(Request $request) {
+        $compPic='';
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
             'fname' => 'required|string|between:2,100',
@@ -54,22 +55,38 @@ class AuthController extends Controller {
             'password' => 'required|string|confirmed|min:6',
             'role' => 'required|string',
             'path' => 'nullable',
-            'status' => 'required'
+            'status' => 'required',
+            'fileSource' => 'nullable'
         ]);
 
         if($validator->fails()){
              return response()->json($validator->errors(), 400);
         }
 
+        if($request->hasFile('fileSource')){
+            $filename=$request->file('fileSource')->getClientOriginalName();
+            $fileNameOnly=pathinfo($filename,PATHINFO_FILENAME);
+            $extention=$request->file('fileSource')->getClientOriginalExtension();
+            $compPic = str_replace('','_',$fileNameOnly).'-'.rand().'_'.time().'.'.$extention;
+            $request->file('fileSource')->storeAs('public/storage/profile_pic',$compPic);
+        }
+
+
         $user = User::create(array_merge(
                     $validator->validated(),
+                    ['path' => $compPic ],
                     ['password' => bcrypt($request->password)]
                 ));
 
+       
         return response()->json([
             'message' => 'User successfully registered',
             'user' => $user
         ], 201);
+        
+        
+        
+
     }
 
     public function me()
