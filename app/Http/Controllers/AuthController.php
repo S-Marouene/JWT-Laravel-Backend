@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Validator;
 use App\User;
 
+Use Image;
 
 class AuthController extends Controller {
 
@@ -63,12 +64,21 @@ class AuthController extends Controller {
              return response()->json($validator->errors(), 400);
         }
 
-        if($request->hasFile('fileSource')){
-            $filename=$request->file('fileSource')->getClientOriginalName();
+        /**$request->hasFile('fileSource')   in if old */ 
+        if($files = $request->file('fileSource')){
+            /* $filename=$request->file('fileSource')->getClientOriginalName();
             $fileNameOnly=pathinfo($filename,PATHINFO_FILENAME);
             $extention=$request->file('fileSource')->getClientOriginalExtension();
             $compPic = str_replace('','_',$fileNameOnly).'-'.rand().'_'.time().'.'.$extention;
-            $request->file('fileSource')->storeAs('public/storage/profile_pic',$compPic);
+            $request->file('fileSource')->storeAs('public/storage/profile_pic',$compPic); */
+
+            $ImageUpload = Image::make($files);
+            $originalPath = 'public/storage/profile_pic/';
+            $ImageUpload->resize(250,250);
+            $compPic = time().$files->getClientOriginalName();
+            $ImageUpload->save($originalPath.$compPic);
+           
+
         }
 
 
@@ -77,6 +87,8 @@ class AuthController extends Controller {
                     ['path' => $compPic ],
                     ['password' => bcrypt($request->password)]
                 ));
+        
+        $user->assignRole(['name' => $request->role]);
 
        
         return response()->json([

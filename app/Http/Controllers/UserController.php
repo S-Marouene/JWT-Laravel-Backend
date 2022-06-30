@@ -32,8 +32,13 @@ class UserController extends Controller
     public function delete($id)
     {
         $user = User::findOrFail($id);
-        if ($user)
+        if ($user){
+            $path=$user->path;
+            if(\Storage::exists('public/storage/profile_pic/'.$path)){
+                \Storage::delete('public/storage/profile_pic/'.$path);
+            }
             $user->delete();
+        }
         else
             return response()->json("error");
         return response()->json("Success delete");
@@ -43,12 +48,12 @@ class UserController extends Controller
     {
         $user = User::find($id);
         if( $user->fill(request()->input())->save() ){
+            $role = Role::where('name','=',request()->input('role'))->first();
+            $user->roles()->sync([$role->id]);
             return response()->json("updated item succesfuly");
         }
         return response()->json("Error"); 
     }
-
-
 
     public function GetUserByToken()
     {
