@@ -18,7 +18,7 @@ Route::group([
     /* USER CRUD */
     Route::get('user-profile', 'AuthController@userProfile');
     Route::delete('delete-user/{id}', 'UserController@delete');
-    Route::put('update-user/{id}', 'UserController@update');
+    Route::post('update_user', 'UserController@update_user');
     Route::get('user-get', 'UserController@GetAllUser');
 
     /**GET USER BY TOKEN */

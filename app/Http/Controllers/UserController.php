@@ -47,14 +47,36 @@ class UserController extends Controller
         return response()->json("Success delete");
     }
 
-    public function update($id)
+    public function update_user(Request $request)
     {
-        $user = User::find($id);
-        if( $user->fill(request()->input())->save() ){
+        $compPic='';
+        $user = User::find($request->id);
+
+        $originalPath = 'public/storage/profile_pic/';
+        $old_path=$originalPath.$user->path;
+
+        if($files = $request->file('fileSource')){
+            if(File::exists($old_path)) {
+                File::delete($old_path);
+            }
+            $ImageUpload = Image::make($files);
+            $ImageUpload->resize(250,250);
+            $compPic = time().$files->getClientOriginalName();
+            $ImageUpload->save($originalPath.$compPic);
+        }
+
+        if($user->update([
+            'path' => $compPic,
+            'name' => $request->name ,
+            'fname' => $request->fname ,
+            'status' => $request->status ,
+            'role' => $request->role ,
+        ]) ) {
             $role = Role::where('name','=',request()->input('role'))->first();
             $user->roles()->sync([$role->id]);
             return response()->json("updated item succesfuly");
         }
+
         return response()->json("Error"); 
     }
 
@@ -80,7 +102,7 @@ class UserController extends Controller
 
     public function ImgProfil_update(Request $request) {
         
-        $user = User::find($request->param1);
+        $user = User::find($request->id);
         $originalPath = 'public/storage/profile_pic/';
 
         $old_path=$originalPath.$user->path;
