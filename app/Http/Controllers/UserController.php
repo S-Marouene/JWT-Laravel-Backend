@@ -13,6 +13,9 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response as FacadesResponse;
+use Illuminate\Http\Request;
+Use Image;
+Use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
@@ -72,5 +75,34 @@ class UserController extends Controller
         $permissions = $user->getAllPermissions();
 
         return response()->json(['RoleName' => $roles, 'AllPermission' => $permissions]);
+    }
+
+
+    public function ImgProfil_update(Request $request) {
+        
+        $user = User::find($request->param1);
+        $originalPath = 'public/storage/profile_pic/';
+
+        $old_path=$originalPath.$user->path;
+
+        if($files = $request->file('fileSource')){
+            if(File::exists($old_path)) {
+                File::delete($old_path);
+            }
+            
+            $ImageUpload = Image::make($files);
+            $ImageUpload->resize(250,250);
+            $compPic = time().$files->getClientOriginalName();
+            $ImageUpload->save($originalPath.$compPic);
+        }
+                
+        $user->update([
+            'path' => $compPic,
+        ]);
+
+        return response()->json([
+            'message' => 'photo successfully updated',
+        ], 201);
+
     }
 }

@@ -27,7 +27,8 @@ Route::group([
     /**ROLE AND PERMISSION */
     Route::get('user-roles',  'UserController@GetPermissionByRole');
 
-
-
+    /**  test */
+    Route::post('ImgProfil_update', 'UserController@ImgProfil_update');
     
+
 });
