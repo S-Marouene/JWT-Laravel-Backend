@@ -49,6 +49,9 @@ class SchoolsController extends Controller
         //
     }
 
+    public function GetAllSchools(){
+        return response()->json(Schools::get());
+    }
     /**
      * Show the form for editing the specified resource.
      *

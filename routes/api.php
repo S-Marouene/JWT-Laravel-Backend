@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
-
 ], function ($router) {
     
     /* LOGIN */
@@ -32,3 +31,13 @@ Route::group([
     
 
 });
+
+
+
+Route::group(['middleware' => ['super-admin'],
+    'prefix' => 'sudo'],
+    function () {
+    Route::get('allSchools',  'SchoolsController@GetAllSchools');
+
+
+ });
