@@ -49,7 +49,7 @@ class UserController extends Controller
 
     public function update_user(Request $request)
     {
-        $compPic='';
+        $compPic=null;
         $user = User::find($request->id);
 
         $originalPath = 'public/storage/profile_pic/';
@@ -65,13 +65,25 @@ class UserController extends Controller
             $ImageUpload->save($originalPath.$compPic);
         }
 
-        if($user->update([
-            'path' => $compPic,
-            'name' => $request->name ,
-            'fname' => $request->fname ,
-            'status' => $request->status ,
-            'role' => $request->role ,
-        ]) ) {
+        if($compPic){
+            $data_updated=[
+                'path' => $compPic,
+                'name' => $request->name ,
+                'fname' => $request->fname ,
+                'status' => $request->status ,
+                'role' => $request->role ,
+            ];
+        }else{
+            $data_updated=[
+                'name' => $request->name ,
+                'fname' => $request->fname ,
+                'status' => $request->status ,
+                'role' => $request->role ,
+            ];
+        }
+        
+
+        if($user->update($data_updated) ) {
             $role = Role::where('name','=',request()->input('role'))->first();
             $user->roles()->sync([$role->id]);
             return response()->json("updated item succesfuly");

@@ -16,3 +16,24 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+/***Create Table school */
+Route::get('create_school', function () {
+    
+    if (!Schema::hasTable('schools')) {
+        Schema::create('schools', function($table)
+            {
+                $table->increments('id');
+                $table->string('Name', 50);
+                $table->string('email', 30);
+                $table->string('phone', 20);
+                $table->string('address', 100);
+                $table->timestamps();
+            });
+        return 'created succesfuly';
+    }
+    
+    return 'table exist';
+    
+    
+});
